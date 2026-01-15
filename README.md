@@ -1,10 +1,10 @@
 # ☕ Warung Kopi POS
 
-Sistem Point of Sale (POS) modern untuk warung kopi dan usaha retail kecil. Dibangun dengan .NET 9 (Backend) dan Next.js 15 (Frontend).
+Sistem Point of Sale (POS) modern untuk warung kopi dan usaha retail kecil. Dibangun dengan .NET 9 (Backend) dan Next.js 16 (Frontend).
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![.NET](https://img.shields.io/badge/.NET-9.0-purple)
-![Next.js](https://img.shields.io/badge/Next.js-15-black)
+![Next.js](https://img.shields.io/badge/Next.js-16-black)
 
 ## ✨ Fitur Utama
 
@@ -47,9 +47,9 @@ Sistem Point of Sale (POS) modern untuk warung kopi dan usaha retail kecil. Diba
 | Layer | Technology |
 |-------|------------|
 | Backend | .NET 9, Entity Framework Core, SQL Server |
-| Frontend | Next.js 15, TypeScript, Tailwind CSS |
+| Frontend | Next.js 16, React 19, TypeScript, Tailwind CSS 4 |
 | Auth | JWT Bearer Token |
-| Monorepo | Nx, pnpm |
+| Monorepo | Nx 18, pnpm |
 
 ## 📁 Struktur Proyek
 
