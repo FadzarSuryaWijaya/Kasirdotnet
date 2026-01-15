@@ -1,0 +1,6 @@
+@WarungKopiAPI_HostAddress = http://localhost:5136
+
+GET {{WarungKopiAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

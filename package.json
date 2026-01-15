@@ -1,0 +1,29 @@
+{
+  "name": "kasirdotnet-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "dev": "nx run-many --target=serve --all --parallel",
+    "build": "nx run-many --target=build --all",
+    "start": "nx run-many --target=start --all",
+    "lint": "nx run-many --target=lint --all",
+    "test": "nx run-many --target=test --all",
+    "graph": "nx graph",
+    "dev:web": "nx serve web",
+    "dev:api": "nx serve api"
+  },
+  "devDependencies": {
+    "@nx/js": "18.0.0",
+    "@nx/next": "18.0.0",
+    "@nx/workspace": "18.0.0",
+    "@nx-dotnet/core": "^2.0.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "nx": "18.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  }
+}

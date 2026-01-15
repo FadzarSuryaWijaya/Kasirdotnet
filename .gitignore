@@ -1,0 +1,104 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# ===================
+# Dependencies
+# ===================
+node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ===================
+# Next.js
+# ===================
+.next/
+/out/
+next-env.d.ts
+
+# ===================
+# Build & Production
+# ===================
+/build
+/dist
+/coverage
+
+# ===================
+# .NET Core
+# ===================
+bin/
+obj/
+Debug/
+Release/
+*.user
+*.suo
+*.pdb
+*.cache
+*.dll
+*.exe
+
+# .NET secrets & local config
+# appsettings.Development.json
+# appsettings.Local.json
+appsettings.*.json
+*.db
+*.db-shm
+*.db-wal
+
+# ===================
+# Environment & Secrets
+# ===================
+.env
+.env.*
+!.env.example
+
+# ===================
+# Logs
+# ===================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ===================
+# IDE & Editors
+# ===================
+.vscode/
+.idea/
+.vs/
+*.swp
+*.swo
+*~
+
+# ===================
+# OS Files
+# ===================
+.DS_Store
+Thumbs.db
+*.pem
+
+# ===================
+# Nx & Monorepo
+# ===================
+.nx/cache/
+.nx/workspace-data/
+
+# ===================
+# Misc
+# ===================
+.vercel
+*.tsbuildinfo
+
+# Temporary files
+*.tmp
+*.temp
+login.json
+
+# ===================
+# Kiro (optional - remove if you want to keep specs)
+# ===================
+# .kiro/
