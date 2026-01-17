@@ -100,6 +100,16 @@ public class SessionsController : ControllerBase
             Status = SessionStatus.Open
         };
 
+        // CHECK: Prevent opening new shift if daily report is already closed
+        var today = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(7)); // WIB
+        var closedReport = await _context.DailyClosures
+            .FirstOrDefaultAsync(c => DateOnly.FromDateTime(c.Date) == today);
+
+        if (closedReport != null)
+        {
+            return BadRequest(new { message = "Laporan harian sudah ditutup. Tidak bisa membuka shift baru. Hubungi admin untuk membuka kembali laporan harian." });
+        }
+
         _context.CashierSessions.Add(session);
         await _context.SaveChangesAsync();
 

@@ -52,7 +52,7 @@ public class PdfGenerationService
             }
 
             // Generate HTML dari transaction data
-            var htmlContent = GenerateReceiptHtmlFromTransaction(transaction, receiptWidth);
+            var htmlContent = await GenerateReceiptHtmlFromTransactionAsync(transaction, receiptWidth);
 
             // Generate PDF menggunakan Playwright
             var pdfData = await GeneratePdfFromHtmlAsync(htmlContent, receiptWidth);
@@ -81,8 +81,11 @@ public class PdfGenerationService
     /// Generate HTML receipt dari Transaction object.
     /// HTML ini akan di-convert ke PDF oleh Playwright.
     /// </summary>
-    private string GenerateReceiptHtmlFromTransaction(Models.Transaction transaction, string receiptWidth)
+    private async Task<string> GenerateReceiptHtmlFromTransactionAsync(Models.Transaction transaction, string receiptWidth)
     {
+        // Load store settings
+        var storeSettings = await LoadStoreSettingsAsync();
+        
         var sb = new StringBuilder();
 
         sb.AppendLine("<!DOCTYPE html>");
@@ -113,7 +116,7 @@ public class PdfGenerationService
         sb.AppendLine("}");
         sb.AppendLine(".header { text-align: center; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px dashed #000; }");
         sb.AppendLine(".header h2 { margin: 0; font-size: 12px; font-weight: bold; }");
-        sb.AppendLine(".header p { margin: 2px 0 0 0; font-size: 9px; }");
+        sb.AppendLine(".header p { margin: 2px 0 0 0; font-size: 9px; word-break: break-word; overflow-wrap: break-word; }");
         sb.AppendLine(".info { margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px dashed #000; font-size: 10px; }");
         sb.AppendLine(".info-row { display: flex; justify-content: space-between; margin: 2px 0; }");
         sb.AppendLine(".items { margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px dashed #000; }");
@@ -132,10 +135,24 @@ public class PdfGenerationService
         sb.AppendLine("<body>");
         sb.AppendLine("<div class='receipt-container'>");
 
-        // Header
+        // Header dengan store settings dinamis
         sb.AppendLine("<div class='header'>");
-        sb.AppendLine("<h2>WARUNG KOPI</h2>");
-        sb.AppendLine("<p>Jl. Kopi Nikmat No. 123</p>");
+        sb.AppendLine($"<h2>{storeSettings.StoreName}</h2>");
+        
+        // Alamat dan telepon
+        if (!string.IsNullOrEmpty(storeSettings.StoreAddress) && !string.IsNullOrEmpty(storeSettings.StorePhone))
+        {
+            sb.AppendLine($"<p>{storeSettings.StoreAddress} | Telp: {storeSettings.StorePhone}</p>");
+        }
+        else if (!string.IsNullOrEmpty(storeSettings.StoreAddress))
+        {
+            sb.AppendLine($"<p>{storeSettings.StoreAddress}</p>");
+        }
+        else if (!string.IsNullOrEmpty(storeSettings.StorePhone))
+        {
+            sb.AppendLine($"<p>Telp: {storeSettings.StorePhone}</p>");
+        }
+        
         sb.AppendLine("</div>");
 
         // Info Transaksi
@@ -146,7 +163,9 @@ public class PdfGenerationService
         sb.AppendLine("</div>");
         sb.AppendLine("<div class='info-row'>");
         sb.AppendLine("<span>Tgl:</span>");
-        sb.AppendLine($"<span>{transaction.CreatedAt:dd/MM/yy HH:mm}</span>");
+        // Konversi ke WIB (UTC+7)
+        var createdAtWib = transaction.CreatedAt.AddHours(7);
+        sb.AppendLine($"<span>{createdAtWib:dd/MM/yy HH:mm}</span>");
         sb.AppendLine("</div>");
         sb.AppendLine("<div class='info-row'>");
         sb.AppendLine("<span>Kasir:</span>");
@@ -215,7 +234,7 @@ public class PdfGenerationService
 
         // Footer
         sb.AppendLine("<div class='footer'>");
-        sb.AppendLine("<p style='font-weight: bold;'>Terima Kasih</p>");
+        sb.AppendLine($"<p style='font-weight: bold;'>{storeSettings.ReceiptFooter}</p>");
         sb.AppendLine("<p style='font-size: 9px;'>Barang tidak dapat ditukar</p>");
         sb.AppendLine("</div>");
 
@@ -227,11 +246,38 @@ public class PdfGenerationService
     }
 
     /// <summary>
+    /// Load store settings dari database
+    /// </summary>
+    private async Task<StoreSettingsModel> LoadStoreSettingsAsync()
+    {
+        var settings = await _context.StoreSettings.ToListAsync();
+        
+        return new StoreSettingsModel
+        {
+            StoreName = settings.FirstOrDefault(s => s.Key == "store_name")?.Value ?? "Kasirdotnet",
+            StoreAddress = settings.FirstOrDefault(s => s.Key == "store_address")?.Value ?? "",
+            StorePhone = settings.FirstOrDefault(s => s.Key == "store_phone")?.Value ?? "",
+            ReceiptFooter = settings.FirstOrDefault(s => s.Key == "receipt_footer")?.Value ?? "Terima Kasih"
+        };
+    }
+
+    private class StoreSettingsModel
+    {
+        public string StoreName { get; set; } = "WARUNG KOPI";
+        public string StoreAddress { get; set; } = "";
+        public string StorePhone { get; set; } = "";
+        public string ReceiptFooter { get; set; } = "Terima Kasih";
+    }
+
+    /// <summary>
     /// Generate HTML receipt dari TransactionSnapshot.
     /// HTML ini akan di-convert ke PDF oleh Playwright.
     /// </summary>
-    private string GenerateReceiptHtml(TransactionSnapshot snapshot, string receiptWidth)
+    private async Task<string> GenerateReceiptHtmlAsync(TransactionSnapshot snapshot, string receiptWidth)
     {
+        // Load store settings
+        var storeSettings = await LoadStoreSettingsAsync();
+        
         var items = System.Text.Json.JsonSerializer.Deserialize<List<Models.TransactionSnapshotItem>>(
             snapshot.ItemsJson) ?? new List<Models.TransactionSnapshotItem>();
 
@@ -277,6 +323,8 @@ public class PdfGenerationService
         sb.AppendLine(".header p {");
         sb.AppendLine("  margin: 2px 0 0 0;");
         sb.AppendLine("  font-size: 9px;");
+        sb.AppendLine("  word-break: break-word;");
+        sb.AppendLine("  overflow-wrap: break-word;");
         sb.AppendLine("}");
         sb.AppendLine(".info {");
         sb.AppendLine("  margin-bottom: 8px;");
@@ -347,10 +395,24 @@ public class PdfGenerationService
         sb.AppendLine("<body>");
         sb.AppendLine("<div class='receipt-container'>");
 
-        // Header
+        // Header dengan store settings dinamis
         sb.AppendLine("<div class='header'>");
-        sb.AppendLine($"<h2>{snapshot.StoreName}</h2>");
-        sb.AppendLine($"<p>{snapshot.StoreAddress}</p>");
+        sb.AppendLine($"<h2>{storeSettings.StoreName}</h2>");
+        
+        // Alamat dan telepon
+        if (!string.IsNullOrEmpty(storeSettings.StoreAddress) && !string.IsNullOrEmpty(storeSettings.StorePhone))
+        {
+            sb.AppendLine($"<p>{storeSettings.StoreAddress} | Telp: {storeSettings.StorePhone}</p>");
+        }
+        else if (!string.IsNullOrEmpty(storeSettings.StoreAddress))
+        {
+            sb.AppendLine($"<p>{storeSettings.StoreAddress}</p>");
+        }
+        else if (!string.IsNullOrEmpty(storeSettings.StorePhone))
+        {
+            sb.AppendLine($"<p>Telp: {storeSettings.StorePhone}</p>");
+        }
+        
         sb.AppendLine("</div>");
 
         // Info Transaksi
@@ -361,7 +423,9 @@ public class PdfGenerationService
         sb.AppendLine("</div>");
         sb.AppendLine("<div class='info-row'>");
         sb.AppendLine("<span>Tgl:</span>");
-        sb.AppendLine($"<span>{snapshot.CreatedAtUtc:dd/MM/yy HH:mm}</span>");
+        // Konversi ke WIB (UTC+7)
+        var createdAtWib = snapshot.CreatedAtUtc.AddHours(7);
+        sb.AppendLine($"<span>{createdAtWib:dd/MM/yy HH:mm}</span>");
         sb.AppendLine("</div>");
         sb.AppendLine("<div class='info-row'>");
         sb.AppendLine("<span>Kasir:</span>");
@@ -430,7 +494,7 @@ public class PdfGenerationService
 
         // Footer
         sb.AppendLine("<div class='footer'>");
-        sb.AppendLine("<p style='font-weight: bold;'>Terima Kasih</p>");
+        sb.AppendLine($"<p style='font-weight: bold;'>{storeSettings.ReceiptFooter}</p>");
         sb.AppendLine("<p style='font-size: 9px;'>Barang tidak dapat ditukar</p>");
         sb.AppendLine("</div>");
 

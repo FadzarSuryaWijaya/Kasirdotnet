@@ -29,7 +29,7 @@ export default function ReceiptPage() {
     store_name: 'WARUNG KOPI',
     store_address: '',
     store_phone: '',
-    receipt_footer: 'Barang yang dibeli tidak dapat ditukar/dikembalikan'
+    receipt_footer: 'Terima Kasih'
   });
 
   // refs for cleanup
@@ -327,8 +327,16 @@ export default function ReceiptPage() {
           {/* Header Toko */}
           <div className="text-center mb-2 pb-2 border-b border-dashed border-black">
             <h2 className="text-sm font-bold uppercase mb-1">{storeSettings.store_name}</h2>
-            {storeSettings.store_address && <p>{storeSettings.store_address}</p>}
-            {storeSettings.store_phone && <p>Telp: {storeSettings.store_phone}</p>}
+            <div className="text-[9px] leading-tight whitespace-normal break-words">
+              {storeSettings.store_address && storeSettings.store_phone ? (
+                <p className="overflow-hidden text-ellipsis">{storeSettings.store_address} | Telp: {storeSettings.store_phone}</p>
+              ) : (
+                <>
+                  {storeSettings.store_address && <p className="overflow-hidden text-ellipsis">{storeSettings.store_address}</p>}
+                  {storeSettings.store_phone && <p className="overflow-hidden text-ellipsis">Telp: {storeSettings.store_phone}</p>}
+                </>
+              )}
+            </div>
           </div>
 
           {/* Info Transaksi */}

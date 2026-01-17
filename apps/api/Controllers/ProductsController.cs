@@ -118,4 +118,74 @@ public class ProductsController : ControllerBase
 
         return NoContent();
     }
+
+    /// <summary>
+    /// Check if product can be deleted and get related data info
+    /// </summary>
+    [HttpGet("{id}/check-delete")]
+    public async Task<IActionResult> CheckDelete(Guid id)
+    {
+        var result = await _productService.CheckDeleteAsync(id);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Check if multiple products can be deleted
+    /// </summary>
+    [HttpPost("check-delete-batch")]
+    public async Task<IActionResult> CheckDeleteBatch([FromBody] CheckDeleteBatchDto dto)
+    {
+        if (dto.Ids == null || !dto.Ids.Any())
+        {
+            return BadRequest(new { message = "No product IDs provided" });
+        }
+
+        var result = await _productService.CheckDeleteBatchAsync(dto.Ids);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Delete single product
+    /// </summary>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProduct(Guid id, [FromQuery] bool forceDelete = false)
+    {
+        var result = await _productService.DeleteProductAsync(id, forceDelete);
+
+        if (!result.Success)
+        {
+            return NotFound(new { message = result.Message });
+        }
+
+        return Ok(new { 
+            message = result.Message, 
+            deletedCount = result.DeletedCount,
+            deactivatedCount = result.DeactivatedCount
+        });
+    }
+
+    /// <summary>
+    /// Delete multiple products
+    /// </summary>
+    [HttpPost("delete-batch")]
+    public async Task<IActionResult> DeleteProducts([FromBody] DeleteProductsDto dto)
+    {
+        if (dto.Ids == null || !dto.Ids.Any())
+        {
+            return BadRequest(new { message = "No product IDs provided" });
+        }
+
+        var result = await _productService.DeleteProductsAsync(dto.Ids, dto.ForceDelete);
+
+        if (!result.Success)
+        {
+            return BadRequest(new { message = result.Message });
+        }
+
+        return Ok(new { 
+            message = result.Message, 
+            deletedCount = result.DeletedCount,
+            deactivatedCount = result.DeactivatedCount
+        });
+    }
 }

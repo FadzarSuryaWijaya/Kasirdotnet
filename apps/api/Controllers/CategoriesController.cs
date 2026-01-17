@@ -94,18 +94,72 @@ public class CategoriesController : ControllerBase
     }
 
     /// <summary>
-    /// Delete category (soft delete)
+    /// Check if category can be deleted and get related data info
     /// </summary>
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteCategory(Guid id)
+    [HttpGet("{id}/check-delete")]
+    public async Task<IActionResult> CheckDelete(Guid id)
     {
-        var result = await _categoryService.DeleteCategoryAsync(id);
+        var result = await _categoryService.CheckDeleteAsync(id);
+        return Ok(result);
+    }
 
-        if (!result)
+    /// <summary>
+    /// Check if multiple categories can be deleted
+    /// </summary>
+    [HttpPost("check-delete-batch")]
+    public async Task<IActionResult> CheckDeleteBatch([FromBody] CheckDeleteBatchDto dto)
+    {
+        if (dto.Ids == null || !dto.Ids.Any())
         {
-            return NotFound(new { message = "Category not found" });
+            return BadRequest(new { message = "No category IDs provided" });
         }
 
-        return NoContent();
+        var result = await _categoryService.CheckDeleteBatchAsync(dto.Ids);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Delete category
+    /// </summary>
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCategory(Guid id, [FromQuery] bool forceDelete = false)
+    {
+        var result = await _categoryService.DeleteCategoryAsync(id, forceDelete);
+
+        if (!result.Success)
+        {
+            return NotFound(new { message = result.Message });
+        }
+
+        return Ok(new { 
+            message = result.Message, 
+            deletedCount = result.DeletedCount,
+            deactivatedCount = result.DeactivatedCount
+        });
+    }
+
+    /// <summary>
+    /// Delete multiple categories
+    /// </summary>
+    [HttpPost("delete-batch")]
+    public async Task<IActionResult> DeleteCategories([FromBody] DeleteCategoriesDto dto)
+    {
+        if (dto.Ids == null || !dto.Ids.Any())
+        {
+            return BadRequest(new { message = "No category IDs provided" });
+        }
+
+        var result = await _categoryService.DeleteCategoriesAsync(dto.Ids, dto.ForceDelete);
+
+        if (!result.Success)
+        {
+            return BadRequest(new { message = result.Message });
+        }
+
+        return Ok(new { 
+            message = result.Message, 
+            deletedCount = result.DeletedCount,
+            deactivatedCount = result.DeactivatedCount
+        });
     }
 }

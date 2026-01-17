@@ -15,3 +15,9 @@ public class CreateCategoryDto
     public string? IconPreset { get; set; }
     public string? IconCustom { get; set; }
 }
+
+public class DeleteCategoriesDto
+{
+    public List<Guid> Ids { get; set; } = new();
+    public bool ForceDelete { get; set; } = false;
+}

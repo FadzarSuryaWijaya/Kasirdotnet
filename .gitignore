@@ -98,7 +98,12 @@ Thumbs.db
 *.temp
 login.json
 
+
 # ===================
-# Kiro (optional - remove if you want to keep specs)
+# Uploads & User Files
 # ===================
-# .kiro/
+apps/api/wwwroot/uploads/
+
+
+nul
+**/nul

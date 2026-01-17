@@ -32,3 +32,14 @@ public class UpdateProductActiveDto
 {
     public bool IsActive { get; set; }
 }
+
+public class DeleteProductsDto
+{
+    public List<Guid> Ids { get; set; } = new();
+    public bool ForceDelete { get; set; } = false;
+}
+
+public class CheckDeleteBatchDto
+{
+    public List<Guid> Ids { get; set; } = new();
+}

@@ -63,7 +63,7 @@ export default function PosPage() {
   const [discountType, setDiscountType] = useState<DiscountType>('percent');
 
   // Tax state from settings
-  const [taxRate, setTaxRate] = useState<number>(0);
+  const [taxRate, setTaxRate] = useState<number>(0.11); // Default 11%
   const [taxMode, setTaxMode] = useState<'default' | 'custom'>('default');
   const [taxPercentage, setTaxPercentage] = useState<number>(11);
 
@@ -99,14 +99,14 @@ export default function PosPage() {
         if (res.ok) {
           const settings = await res.json();
           const mode = settings.tax_mode?.value || 'default';
-          let tax = 0;
+          let tax = 11; // Default 11%
           
           setTaxMode(mode as 'default' | 'custom');
           
           if (mode === 'custom') {
-            tax = parseFloat(settings.custom_tax?.value || '11');
+            tax = parseFloat(settings.custom_tax?.value) || 11;
           } else {
-            tax = parseFloat(settings.default_tax?.value || '11');
+            tax = parseFloat(settings.default_tax?.value) || 11;
           }
           
           setTaxPercentage(tax);
@@ -114,6 +114,7 @@ export default function PosPage() {
         }
       } catch (err) {
         console.error('Failed to load tax settings:', err);
+        // Keep default 11% tax rate
       }
     };
     loadTaxSettings();
