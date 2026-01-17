@@ -26,7 +26,7 @@ export default function ReceiptPage() {
   const [printing, setPrinting] = useState(false);
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [storeSettings, setStoreSettings] = useState<StoreSettings>({
-    store_name: 'WARUNG KOPI',
+    store_name: '',
     store_address: '',
     store_phone: '',
     receipt_footer: 'Terima Kasih'
@@ -56,7 +56,7 @@ export default function ReceiptPage() {
         
         if (settingsRes) {
           setStoreSettings({
-            store_name: settingsRes.store_name?.value || 'WARUNG KOPI',
+            store_name: settingsRes.store_name?.value || '',
             store_address: settingsRes.store_address?.value || '',
             store_phone: settingsRes.store_phone?.value || '',
             receipt_footer: settingsRes.receipt_footer?.value || 'Barang yang dibeli tidak dapat ditukar/dikembalikan'

@@ -62,7 +62,7 @@ export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
-  const [storeName, setStoreName] = useState('Warung Kopi');
+  const [storeName, setStoreName] = useState('');
   const pathname = usePathname();
   const { user } = useAuth();
   

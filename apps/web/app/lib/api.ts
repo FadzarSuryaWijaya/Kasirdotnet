@@ -481,6 +481,10 @@ interface CloseDayRequest {
 }
 
 export const reportsApi = {
+  getSummary: async (): Promise<any> => {
+    return apiCall<any>('/api/reports/summary', 'GET');
+  },
+
   getDailyReport: async (date?: string): Promise<DailyReportResponse> => {
     const params = new URLSearchParams();
     if (date) params.append('date', date);
@@ -660,6 +664,10 @@ export const usersApi = {
 
   toggleActive: async (id: string): Promise<{ isActive: boolean }> => {
     return apiCall<{ isActive: boolean }>(`/api/users/${id}/toggle-active`, 'PATCH');
+  },
+
+  delete: async (id: string): Promise<{ message: string }> => {
+    return apiCall<{ message: string }>(`/api/users/${id}`, 'DELETE');
   },
 };
 

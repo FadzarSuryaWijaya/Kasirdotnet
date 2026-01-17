@@ -87,6 +87,22 @@ export default function UsersPage() {
     }
   };
 
+  const handleDelete = async (user: UserResponse) => {
+    if (user.id === currentUser?.id) {
+      alert('Tidak bisa menghapus diri sendiri');
+      return;
+    }
+    if (!confirm(`Yakin ingin menghapus kasir "${user.name}"? Tindakan ini tidak bisa dibatalkan.`)) {
+      return;
+    }
+    try {
+      await usersApi.delete(user.id);
+      loadUsers();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Gagal menghapus user');
+    }
+  };
+
   const handleResetPassword = async () => {
     if (!newPassword || newPassword.length < 4) {
       alert('Password minimal 4 karakter');
@@ -163,6 +179,9 @@ export default function UsersPage() {
                           </button>
                           <button onClick={() => handleToggleActive(user)} disabled={user.id === currentUser?.id} className={`p-1.5 rounded ${user.id === currentUser?.id ? 'text-gray-300 cursor-not-allowed' : user.isActive ? 'text-gray-500 hover:text-red-600 hover:bg-red-50' : 'text-gray-500 hover:text-green-600 hover:bg-green-50'}`} title={user.isActive ? 'Nonaktifkan' : 'Aktifkan'}>
                             <span className="material-symbols-outlined text-lg">{user.isActive ? 'person_off' : 'person'}</span>
+                          </button>
+                          <button onClick={() => handleDelete(user)} disabled={user.id === currentUser?.id} className={`p-1.5 rounded ${user.id === currentUser?.id ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-red-600 hover:bg-red-50'}`} title="Hapus">
+                            <span className="material-symbols-outlined text-lg">delete</span>
                           </button>
                         </div>
                       </td>

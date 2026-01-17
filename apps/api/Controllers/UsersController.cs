@@ -192,4 +192,40 @@ public class UsersController : ControllerBase
 
         return Ok(new { message = user.IsActive ? "User diaktifkan" : "User dinonaktifkan", isActive = user.IsActive });
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id)
+    {
+        if (!Guid.TryParse(id, out var userId))
+            return BadRequest(new { message = "Invalid ID" });
+
+        var currentUserId = GetUserId();
+        if (userId == currentUserId)
+            return BadRequest(new { message = "Tidak bisa menghapus diri sendiri" });
+
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null)
+            return NotFound(new { message = "User not found" });
+
+        // Check if user has active sessions
+        var activeSessions = await _context.CashierSessions
+            .AnyAsync(s => s.CashierId == userId && s.Status == SessionStatus.Open);
+        
+        if (activeSessions)
+            return BadRequest(new { message = "Tidak bisa menghapus user yang memiliki shift aktif" });
+
+        // Audit log before deletion
+        await _auditService.LogAsync(
+            AuditAction.UserDeleted,
+            currentUserId,
+            "User",
+            userId.ToString(),
+            $"Menghapus user: {user.Name} ({user.Username})"
+        );
+
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "User berhasil dihapus" });
+    }
 }

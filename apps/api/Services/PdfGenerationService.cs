@@ -263,7 +263,7 @@ public class PdfGenerationService
 
     private class StoreSettingsModel
     {
-        public string StoreName { get; set; } = "WARUNG KOPI";
+        public string StoreName { get; set; } = "";
         public string StoreAddress { get; set; } = "";
         public string StorePhone { get; set; } = "";
         public string ReceiptFooter { get; set; } = "Terima Kasih";
