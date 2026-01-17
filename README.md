@@ -1,4 +1,4 @@
-# ☕ Warung Kopi POS
+# ☕ KasirDotNet POS
 
 Sistem Point of Sale (POS) modern untuk warung kopi dan usaha retail kecil. Dibangun dengan .NET 9 (Backend) dan Next.js 16 (Frontend).
 
