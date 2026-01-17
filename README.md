@@ -301,6 +301,9 @@ pnpm start
 4. Push ke branch (`git push origin feature/AmazingFeature`)
 5. Buat Pull Request
 
+## Infografis Warung Kopi
+![Infografis](infografis.jpeg)
+
 ## 📄 License
 
 MIT License - Silakan gunakan untuk keperluan pribadi atau komersial.
