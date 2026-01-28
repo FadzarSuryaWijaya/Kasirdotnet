@@ -1,5 +1,0 @@
-{
-  "buildCommand": "ls -la && ls -la apps && ls -la apps/web && cd apps/web && npm install --legacy-peer-deps && npm run build",
-  "outputDirectory": "apps/web/.next",
-  "installCommand": "npm install --legacy-peer-deps"
-}
