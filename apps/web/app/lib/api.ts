@@ -791,6 +791,57 @@ export const cashDrawerApi = {
   },
 };
 
+// Upload types
+interface UploadStatsResponse {
+  totalFiles: number;
+  maxLimit: number;
+  usage: string;
+  totalSizeBytes: number;
+  totalSizeMB: number;
+  files: Array<{
+    name: string;
+    sizeBytes: number;
+    sizeMB: number;
+    createdAt: string;
+    url: string;
+  }>;
+}
+
+// Upload API
+export const uploadApi = {
+  uploadImage: async (file: File): Promise<{ imageUrl: string; message: string }> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const token = getAuthToken();
+    const headers: HeadersInit = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/upload/image`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Upload failed');
+    }
+
+    return response.json();
+  },
+
+  deleteImage: async (imageUrl: string): Promise<{ message: string }> => {
+    return apiCall<{ message: string }>(`/api/upload/image?imageUrl=${encodeURIComponent(imageUrl)}`, 'DELETE');
+  },
+
+  getStats: async (): Promise<UploadStatsResponse> => {
+    return apiCall<UploadStatsResponse>('/api/upload/stats', 'GET');
+  },
+};
+
 export type {
   LoginRequest,
   LoginResponse,
@@ -833,4 +884,5 @@ export type {
   StockHistoryResponse,
   CashDrawerSummaryResponse,
   CashDrawerHistoryResponse,
+  UploadStatsResponse,
 };
