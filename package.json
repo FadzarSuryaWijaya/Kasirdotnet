@@ -13,6 +13,11 @@
     "dev:web": "nx serve web",
     "dev:api": "nx serve api"
   },
+  "dependencies": {
+    "next": "16.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
   "devDependencies": {
     "@nx/js": "18.0.0",
     "@nx/next": "18.0.0",
