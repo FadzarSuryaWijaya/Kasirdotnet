@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "installCommand": "npm install --legacy-peer-deps --no-optional",
-  "nodeVersion": "18.17.0"
+  "installCommand": "npm install --legacy-peer-deps --no-optional"
 }
+
