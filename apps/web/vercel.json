@@ -1,0 +1,4 @@
+{
+  "installCommand": "cd ../.. && npm install --legacy-peer-deps && cd apps/web && npm install --legacy-peer-deps",
+  "buildCommand": "npm run build"
+}
