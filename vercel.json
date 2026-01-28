@@ -1,6 +1,5 @@
 {
-  "buildCommand": "npm install --prefix apps/web --legacy-peer-deps && cd apps/web && npm run build",
+  "buildCommand": "ls -la && ls -la apps && ls -la apps/web && cd apps/web && npm install --legacy-peer-deps && npm run build",
   "outputDirectory": "apps/web/.next",
-  "installCommand": "npm install --legacy-peer-deps",
-  "framework": null
+  "installCommand": "npm install --legacy-peer-deps"
 }
