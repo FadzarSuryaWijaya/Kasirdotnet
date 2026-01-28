@@ -12,6 +12,10 @@ node_modules/
 !.yarn/releases
 !.yarn/versions
 
+# pnpm (if switching to npm, delete these files)
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
 # ===================
 # Next.js / Frontend
 # ===================
