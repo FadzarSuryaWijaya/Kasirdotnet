@@ -1,4 +1,0 @@
-# Only ignore these specific files, not directories
-/nx.json
-/pnpm-lock.yaml
-/pnpm-workspace.yaml
