@@ -293,6 +293,57 @@ cd kasirdotnet && pnpm build
 pnpm start
 ```
 
+## 🚀 Deployment
+
+### Deploy API ke SmarterASP.NET
+
+Aplikasi sudah dikonfigurasi untuk deployment ke SmarterASP.NET dengan .NET 9.0 self-contained.
+
+#### Quick Deploy:
+
+1. **Publish API**
+   ```bash
+   # Windows Command Prompt
+   publish-api.bat
+   
+   # PowerShell
+   .\publish-api.ps1
+   ```
+
+2. **Konfigurasi**
+   - Edit `dist/publish-api/appsettings.Production.json`
+   - Update connection string (SQL Server atau SQLite)
+   - Update CORS origins dengan domain frontend Anda
+   - JWT Key sudah di-generate (opsional: ganti untuk keamanan maksimal)
+
+3. **Upload ke Server**
+   - Upload semua file dari `dist/publish-api/` ke root website
+   - Set write permission untuk folder: `Data/`, `wwwroot/uploads/`, `logs/`
+   - Restart aplikasi di control panel
+
+#### Dokumentasi Lengkap:
+
+Semua dokumentasi deployment ada di folder `dist/publish-api/`:
+- **README-DEPLOYMENT.txt** - Panduan deployment lengkap
+- **SMARTERASP-SETUP.txt** - Setup khusus SmarterASP.NET
+- **DEPLOYMENT-CHECKLIST.txt** - Checklist step-by-step
+- **CONFIGURATION-GUIDE.txt** - Panduan konfigurasi detail
+- **QUICK-REFERENCE.txt** - Referensi cepat
+
+Atau lihat: [CONFIGURATION-SUMMARY.md](CONFIGURATION-SUMMARY.md) dan [PUBLISH-INFO.md](PUBLISH-INFO.md)
+
+### Deploy Frontend ke Vercel
+
+1. Push repository ke GitHub
+2. Import project di Vercel
+3. Set environment variables:
+   ```
+   NEXT_PUBLIC_API_URL=https://your-api-domain.com
+   ```
+4. Deploy!
+
+Vercel akan otomatis detect Next.js dan build dengan konfigurasi optimal.
+
 ## 🤝 Contributing
 
 1. Fork repository

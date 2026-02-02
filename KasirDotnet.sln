@@ -10,7 +10,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarungKopiAPI", "apps\api\WarungKopiAPI.csproj", "{BF058011-8585-4AB0-8B44-E556530F8C44}"
 EndProject
 Global
-	GlobalSectidotnet buildon(SolutionConfigurationPlatforms) = preSolution
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
